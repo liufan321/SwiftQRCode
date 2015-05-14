@@ -77,7 +77,7 @@ self.scanner = [[QRCode alloc] initWithAutoRemoveSubLayers:NO lineWidth:4.0 stro
 CIColor *color = [CIColor colorWithRed:0 green:0 blue:0];
 CIColor *backColor = [CIColor colorWithRed:1 green:1 blue:1];
 
-self.iconView.image = [self.scanner generateImage:@"我就是刀哥" avatarImage:nil avatarScale:0.3 color:color backColor:backColor];
+self.iconView.image = [self.scanner generateImage:@"Hello SwiftQRCode" avatarImage:nil avatarScale:0.3 color:color backColor:backColor];
 
 ```
 
