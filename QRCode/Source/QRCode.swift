@@ -32,6 +32,14 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
         self.autoRemoveSubLayers = autoRemoveSubLayers
     }
     
+    deinit {
+        if session.running {
+            session.stopRunning()
+        }
+        
+        removeAllLayers()
+    }
+    
     // MARK: - Generate QRCode Image
     public func generateImage(stringValue: String, avatarImage: UIImage?, avatarScale: CGFloat = 0.25, color: CIColor = CIColor(red: 0, green: 0, blue: 0), backColor: CIColor = CIColor(red: 1, green: 1, blue: 1)) -> UIImage? {
         
