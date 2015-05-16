@@ -23,10 +23,10 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
     var autoRemoveSubLayers: Bool
     /// completion call back
     var completedCallBack: ((stringValue: String) -> ())?
-    
-    //扫描二维码的范围
+    /// 扫描二维码的范围
     var scanFrame: CGRect = CGRectZero
     
+    /// QRCode init func
     public init(autoRemoveSubLayers: Bool = false, lineWidth: CGFloat = 4, strokeColor: UIColor = UIColor.greenColor(), maxDetectedCount: Int = 20) {
         
         self.lineWidth = lineWidth
