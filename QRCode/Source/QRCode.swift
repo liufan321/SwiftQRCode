@@ -24,6 +24,9 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
     /// completion call back
     var completedCallBack: ((stringValue: String) -> ())?
     
+    //扫描二维码的范围
+    var scanFrame: CGRect = CGRectZero
+    
     public init(autoRemoveSubLayers: Bool = false, lineWidth: CGFloat = 4, strokeColor: UIColor = UIColor.greenColor(), maxDetectedCount: Int = 20) {
         
         self.lineWidth = lineWidth
@@ -66,7 +69,7 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
         
         return image
     }
-
+    
     func insertAvatarImage(codeImage: UIImage, avatarImage: UIImage, scale: CGFloat) -> UIImage {
         
         let rect = CGRectMake(0, 0, codeImage.size.width, codeImage.size.height)
@@ -78,7 +81,7 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
         let x = (rect.width - avatarSize.width) * 0.5
         let y = (rect.height - avatarSize.height) * 0.5
         avatarImage.drawInRect(CGRectMake(x, y, avatarSize.width, avatarSize.height))
-
+        
         let result = UIGraphicsGetImageFromCurrentImageContext()
         
         UIGraphicsEndImageContext()
@@ -88,6 +91,8 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
     
     // MARK: - Video Scan
     public func scanCode(view: UIView, completion:(stringValue: String)->()) {
+        //默认扫描用的矩阵框为整个扫描框的大小,如果要设置扫描的范围,在调用此方法后,再给scanFrame赋一个想要限制的扫描框范围的值即可.
+        scanFrame = view.frame
         
         completedCallBack = completion
         currentDetectedCount = 0
@@ -95,7 +100,7 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
         setupSession()
         setupLayers(view)
     }
-
+    
     func setupLayers(view: UIView) {
         drawLayer.frame = view.bounds
         view.layer.insertSublayer(drawLayer, atIndex: 0)
@@ -129,20 +134,29 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
     }
     
     public func captureOutput(captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [AnyObject]!, fromConnection connection: AVCaptureConnection!) {
-     
+        
         clearDrawLayer()
         
         for dataObject in metadataObjects {
+            
+            //确保当前的这个对象是AVMetadataMachineReadableCodeObject类型的.
             if let codeObject = dataObject as? AVMetadataMachineReadableCodeObject {
-                
-                if currentDetectedCount++ > maxDetectedCount {
+                //获取扫描到的二维码
+                let obj = previewLayer.transformedMetadataObjectForMetadataObject(codeObject) as! AVMetadataMachineReadableCodeObject
+                //判断如果二维码在定下的矩阵框中,则将扫描到的值输出
+                if scanFrame.contains(obj.bounds.origin) && scanFrame.contains(CGPointMake(CGRectGetMaxX(obj.bounds), CGRectGetMaxY(obj.bounds))){
+                    
+                    //if currentDetectedCount++ > maxDetectedCount {
                     session.stopRunning()
                     
+                    
+                    //在外部调用时,可以返回扫描出的值
                     completedCallBack!(stringValue: codeObject.stringValue)
                     
                     if autoRemoveSubLayers {
                         removeAllLayers()
                     }
+                    //                }
                 }
                 
                 // transform codeObject
@@ -200,29 +214,29 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
     /// previewLayer
     lazy var previewLayer: AVCaptureVideoPreviewLayer = {
         return AVCaptureVideoPreviewLayer(session: self.session)
-    }()
-
+        }()
+    
     /// drawLayer
     lazy var drawLayer: CALayer = {
         return CALayer()
-    }()
+        }()
     
     /// session
     lazy var session: AVCaptureSession = {
         return AVCaptureSession()
-    }()
-
+        }()
+    
     /// input
     lazy var videoInput: AVCaptureDeviceInput? = {
         if let device = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo) {
             return AVCaptureDeviceInput(device: device, error: nil)
         }
         return nil
-    }()
-
+        }()
+    
     /// output
     lazy var dataOutput: AVCaptureMetadataOutput = {
         return AVCaptureMetadataOutput()
-    }()
+        }()
     
 }
