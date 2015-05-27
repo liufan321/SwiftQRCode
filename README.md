@@ -58,7 +58,7 @@ scanner.scanCode(view) { (stringValue) in
 iconView.image = scanner.generateImage("Hello SwiftQRCode", avatarImage: nil)
 ```
 
-### Objective C
+### Objective-C
 
 ```objc
 #import <SwiftQRCode/SwiftQRCode-Swift.h>
