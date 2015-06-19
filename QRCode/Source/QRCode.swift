@@ -249,7 +249,9 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
     
     /// previewLayer
     lazy var previewLayer: AVCaptureVideoPreviewLayer = {
-        return AVCaptureVideoPreviewLayer(session: self.session)
+        let layer = AVCaptureVideoPreviewLayer(session: self.session)
+        layer.videoGravity = AVLayerVideoGravityResizeAspectFill
+        return layer
         }()
     
     /// drawLayer
