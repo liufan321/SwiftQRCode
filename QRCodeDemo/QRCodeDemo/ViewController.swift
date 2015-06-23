@@ -19,7 +19,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         scanner.prepareScan(view) { (stringValue) -> () in
-            println(stringValue)
+            print(stringValue)
         }
         // test scan frame
         scanner.scanFrame = view.bounds
@@ -31,7 +31,7 @@ class ViewController: UIViewController {
         scanner.startScan()
     }
     
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         self.iconView.image = QRCode.generateImage("我就是刀哥", avatarImage: UIImage(named: "avatar"), avatarScale: 0.3)
     }
 }
