@@ -28,13 +28,25 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
     
     ///  init function
     ///
-    ///  - parameter autoRemoveSubLayers: remove sub layers auto after detected code image, defalt is false
+    ///  - returns: the scanner object
+    public override init() {
+        self.lineWidth = 4
+        self.strokeColor = UIColor.greenColor()
+        self.maxDetectedCount = 20
+        self.autoRemoveSubLayers = false
+        
+        super.init()
+    }
+    
+    ///  init function
+    ///
+    ///  - parameter autoRemoveSubLayers: remove sub layers auto after detected code image
     ///  - parameter lineWidth:           line width, default is 4
     ///  - parameter strokeColor:         stroke color, default is Green
     ///  - parameter maxDetectedCount:    max detecte count, default is 20
     ///
     ///  - returns: the scanner object
-    public init(autoRemoveSubLayers: Bool = false, lineWidth: CGFloat = 4, strokeColor: UIColor = UIColor.greenColor(), maxDetectedCount: Int = 20) {
+    public init(autoRemoveSubLayers: Bool, lineWidth: CGFloat = 4, strokeColor: UIColor = UIColor.greenColor(), maxDetectedCount: Int = 20) {
         
         self.lineWidth = lineWidth
         self.strokeColor = strokeColor
@@ -55,11 +67,22 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
     ///  - parameter stringValue: string value to encoe
     ///  - parameter avatarImage: avatar image will display in the center of qrcode image
     ///  - parameter avatarScale: the scale for avatar image, default is 0.25
+    ///
+    ///  - returns: the generated image
+    class public func generateImage(stringValue: String, avatarImage: UIImage?, avatarScale: CGFloat = 0.25) -> UIImage? {
+        return generateImage(stringValue, avatarImage: avatarImage, avatarScale: avatarScale, color: CIColor(color: UIColor.blackColor())!, backColor: CIColor(color: UIColor.whiteColor())!)
+    }
+    
+    ///  Generate Qrcode Image
+    ///
+    ///  - parameter stringValue: string value to encoe
+    ///  - parameter avatarImage: avatar image will display in the center of qrcode image
+    ///  - parameter avatarScale: the scale for avatar image, default is 0.25
     ///  - parameter color:       the CI color for forenground, default is black
     ///  - parameter backColor:   th CI color for background, default is white
     ///
     ///  - returns: the generated image
-    class public func generateImage(stringValue: String, avatarImage: UIImage?, avatarScale: CGFloat = 0.25, color: CIColor = CIColor(color: UIColor.blackColor())!, backColor: CIColor = CIColor(color: UIColor.whiteColor())!) -> UIImage? {
+    class public func generateImage(stringValue: String, avatarImage: UIImage?, avatarScale: CGFloat = 0.25, color: CIColor, backColor: CIColor) -> UIImage? {
         
         // generate qrcode image
         let qrFilter = CIFilter(name: "CIQRCodeGenerator")

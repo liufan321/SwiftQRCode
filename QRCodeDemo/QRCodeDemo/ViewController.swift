@@ -12,7 +12,8 @@ import QRCode
 
 class ViewController: UIViewController {
 
-    let scanner = QRCode(autoRemoveSubLayers: false)
+    let scanner = QRCode()
+    
     @IBOutlet weak var iconView: UIImageView!
     
     override func viewDidLoad() {
