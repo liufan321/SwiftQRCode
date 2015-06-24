@@ -7,4 +7,7 @@
    <FileRef
       location = "group:QRCodeDemo/QRCodeDemo.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:QRcodeDemoObjc/QRcodeDemoObjc.xcodeproj">
+   </FileRef>
 </Workspace>

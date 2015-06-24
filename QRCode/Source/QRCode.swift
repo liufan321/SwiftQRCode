@@ -204,9 +204,6 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
                 let obj = previewLayer.transformedMetadataObjectForMetadataObject(codeObject) as! AVMetadataMachineReadableCodeObject
 
                 if CGRectContainsRect(scanFrame, obj.bounds) {
-                    println(scanFrame)
-                    println(obj.bounds)
-                    
                     if currentDetectedCount++ > maxDetectedCount {
                         session.stopRunning()
                         
