@@ -33,7 +33,7 @@ class ViewController: UIViewController {
     }
     
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
-        self.iconView.image = QRCode.generateImage("我就是刀哥", avatarImage: UIImage(named: "avatar"), avatarScale: 0.3)
+        self.iconView.image = QRCode.generateImage("我就是刀哥", avatarImage: UIImage(named: "avatar"))
     }
 }
 

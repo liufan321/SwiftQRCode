@@ -20,6 +20,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // alloc and prepare for scan
     self.scanner = [[QRCode alloc] init];
     [self.scanner prepareScan:self.view completion:^(NSString * __nonnull stringValue) {
         NSLog(@"%@", stringValue);
@@ -29,6 +30,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
+    // start scan
     [self.scanner startScan];
 }
 

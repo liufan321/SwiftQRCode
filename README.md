@@ -44,40 +44,76 @@ For more information about how to use CocoaPods, I suggest [this tutorial](http:
 
 ### Swift
 
+1. import framework
+
 ```swift
 import SwiftQRCode
+```
 
+2. scan qrcode
+
+```swift
 let scanner = QRCode()
 
-// scan qrcode
-scanner.scanCode(view) { (stringValue) in
-    println(stringValue)
+override func viewDidLoad() {
+    super.viewDidLoad()
+
+    scanner.prepareScan(view) { (stringValue) -> () in
+        println(stringValue)
+    }
+    scanner.scanFrame = view.bounds
 }
 
+override func viewDidAppear(animated: Bool) {
+    super.viewDidAppear(animated)
+
+    // start scan
+    scanner.startScan()
+}
+```
+
+3. generate qrcode image
+
+```swift
 // generate qrcode
-iconView.image = QRCode.generateImage("Hello SwiftQRCode", avatarImage: nil)
+iconView.image = QRCode.generateImage("Hello SwiftQRCode", avatarImage: UIImage(named: "avatar"), avatarScale: 0.3)
 ```
 
 ### Objective-C
 
-```objc
-#import <SwiftQRCode/SwiftQRCode-Swift.h>
-#import <CoreImage/CoreImage.h>
+1. import "ProjectName-Swift.h"
 
+```objc
+#import "QRCodeDemoObjc-Swift.h"
+```
+
+2. scan qrcode
+
+```objc
 @property (nonatomic, strong) QRCode *scanner;
 
-// scan qrcode
-self.scanner = [[QRCode alloc] initWithAutoRemoveSubLayers:NO lineWidth:4.0 strokeColor:[UIColor blueColor] maxDetectedCount:20];
+- (void)viewDidLoad {
+    [super viewDidLoad];
 
-[self.scanner scanCode:self.view completion:^(NSString * stringValue) {
-    NSLog(@"%@", stringValue);
-}];
+    // alloc and prepare for scan
+    self.scanner = [[QRCode alloc] init];
+    [self.scanner prepareScan:self.view completion:^(NSString * __nonnull stringValue) {
+        NSLog(@"%@", stringValue);
+    }];
+}
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+
+    // start scan
+    [self.scanner startScan];
+}
+```
+
+3. generate qrcode image
+
+```objc
 // generate qrcode
-CIColor *color = [CIColor colorWithRed:0 green:0 blue:0];
-CIColor *backColor = [CIColor colorWithRed:1 green:1 blue:1];
-
-self.iconView.image = [self.scanner generateImage:@"Hello SwiftQRCode" avatarImage:nil avatarScale:0.3 color:color backColor:backColor];
-
+[QRCode generateImage:@"Hello SwiftQRCode" avatarImage:[UIImage imageNamed:@"avatar.jpg"] avatarScale:0.25];
 ```
 
