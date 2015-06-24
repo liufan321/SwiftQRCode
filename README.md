@@ -44,13 +44,13 @@ For more information about how to use CocoaPods, I suggest [this tutorial](http:
 
 ### Swift
 
-1. import framework
+* import framework
 
 ```swift
 import SwiftQRCode
 ```
 
-2. scan qrcode
+* scan qrcode
 
 ```swift
 let scanner = QRCode()
@@ -72,7 +72,7 @@ override func viewDidAppear(animated: Bool) {
 }
 ```
 
-3. generate qrcode image
+* generate qrcode image
 
 ```swift
 // generate qrcode
@@ -81,13 +81,15 @@ iconView.image = QRCode.generateImage("Hello SwiftQRCode", avatarImage: UIImage(
 
 ### Objective-C
 
-1. import "ProjectName-Swift.h"
+* import "ProjectName-Swift.h"
+
+> 头文件格式是 "项目名称-Swift.h"
 
 ```objc
 #import "QRCodeDemoObjc-Swift.h"
 ```
 
-2. scan qrcode
+* scan qrcode
 
 ```objc
 @property (nonatomic, strong) QRCode *scanner;
@@ -110,7 +112,7 @@ iconView.image = QRCode.generateImage("Hello SwiftQRCode", avatarImage: UIImage(
 }
 ```
 
-3. generate qrcode image
+* generate qrcode image
 
 ```objc
 // generate qrcode
