@@ -62,7 +62,8 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
         removeAllLayers()
     }
     
-    ///  Generate Qrcode Image
+    // MARK: - Generate QRCode Image
+    ///  generate image
     ///
     ///  - parameter stringValue: string value to encoe
     ///  - parameter avatarImage: avatar image will display in the center of qrcode image
@@ -70,7 +71,7 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
     ///
     ///  - returns: the generated image
     class public func generateImage(stringValue: String, avatarImage: UIImage?, avatarScale: CGFloat = 0.25) -> UIImage? {
-        return generateImage(stringValue, avatarImage: avatarImage, avatarScale: avatarScale, color: CIColor(color: UIColor.blackColor())!, backColor: CIColor(color: UIColor.whiteColor())!)
+        return generateImage(stringValue, avatarImage: avatarImage, avatarScale: avatarScale, color: CIColor(color: UIColor.blackColor()), backColor: CIColor(color: UIColor.whiteColor()))
     }
     
     ///  Generate Qrcode Image
@@ -85,13 +86,14 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
     class public func generateImage(stringValue: String, avatarImage: UIImage?, avatarScale: CGFloat = 0.25, color: CIColor, backColor: CIColor) -> UIImage? {
         
         // generate qrcode image
-        let qrFilter = CIFilter(name: "CIQRCodeGenerator")
+        let qrFilter = CIFilter(name: "CIQRCodeGenerator")!
         qrFilter.setDefaults()
         qrFilter.setValue(stringValue.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false), forKey: "inputMessage")
+        
         let ciImage = qrFilter.outputImage
- 
+        
         // scale qrcode image
-        let colorFilter = CIFilter(name: "CIFalseColor")
+        let colorFilter = CIFilter(name: "CIFalseColor")!
         colorFilter.setDefaults()
         colorFilter.setValue(ciImage, forKey: "inputImage")
         colorFilter.setValue(color, forKey: "inputColor0")
@@ -288,7 +290,5 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
         }()
     
     /// output
-    lazy var dataOutput: AVCaptureMetadataOutput = {
-        return AVCaptureMetadataOutput()
-        }()
+    lazy var dataOutput = AVCaptureMetadataOutput()
 }
