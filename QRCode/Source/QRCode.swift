@@ -56,27 +56,17 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
     ///  - parameter stringValue: string value to encoe
     ///  - parameter avatarImage: avatar image will display in the center of qrcode image
     ///  - parameter avatarScale: the scale for avatar image, default is 0.25
-    ///  - parameter color:       the CI color for forenground, default is black
-    ///  - parameter backColor:   th CI color for background, default is white
     ///
     ///  - returns: the generated image
-    class public func generateImage(stringValue: String, avatarImage: UIImage?, avatarScale: CGFloat = 0.25, color: CIColor = CIColor(color: UIColor.blackColor()), backColor: CIColor = CIColor(color: UIColor.whiteColor())) -> UIImage? {
+    class public func generateImage(stringValue: String, avatarImage: UIImage?, avatarScale: CGFloat = 0.25) -> UIImage? {
         
         // generate qrcode image
         let qrFilter = CIFilter(name: "CIQRCodeGenerator")!
         qrFilter.setDefaults()
         qrFilter.setValue(stringValue.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false), forKey: "inputMessage")
-        let ciImage = qrFilter.outputImage
         
-        // scale qrcode image
-        let colorFilter = CIFilter(name: "CIFalseColor")!
-        colorFilter.setDefaults()
-        colorFilter.setValue(ciImage, forKey: "inputImage")
-        colorFilter.setValue(color, forKey: "inputColor0")
-        colorFilter.setValue(backColor, forKey: "inputColor1")
-        
-        let transform = CGAffineTransformMakeScale(5, 5)
-        let transformedImage = colorFilter.outputImage!.imageByApplyingTransform(transform)
+        let transform = CGAffineTransformMakeScale(10, 10)
+        let transformedImage = qrFilter.outputImage!.imageByApplyingTransform(transform)
         
         let image = UIImage(CIImage: transformedImage)
         
@@ -178,13 +168,10 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
         
         for dataObject in metadataObjects {
             
-            if let codeObject = dataObject as? AVMetadataMachineReadableCodeObject {
-                let obj = previewLayer.transformedMetadataObjectForMetadataObject(codeObject) as! AVMetadataMachineReadableCodeObject
+            if let codeObject = dataObject as? AVMetadataMachineReadableCodeObject,
+                obj = previewLayer.transformedMetadataObjectForMetadataObject(codeObject) as? AVMetadataMachineReadableCodeObject {
 
                 if CGRectContainsRect(scanFrame, obj.bounds) {
-                    print(scanFrame)
-                    print(obj.bounds)
-                    
                     if currentDetectedCount++ > maxDetectedCount {
                         session.stopRunning()
                         
@@ -256,30 +243,18 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
         }()
     
     /// drawLayer
-    lazy var drawLayer: CALayer = {
-        return CALayer()
-        }()
-    
+    lazy var drawLayer = CALayer()
     /// session
-    lazy var session: AVCaptureSession = {
-        return AVCaptureSession()
-        }()
-    
+    lazy var session = AVCaptureSession()
     /// input
     lazy var videoInput: AVCaptureDeviceInput? = {
+        
         if let device = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo) {
-            do {
-                return try AVCaptureDeviceInput(device: device)
-            } catch _ {
-                return nil
-            }
+            return try? AVCaptureDeviceInput(device: device)
         }
         return nil
         }()
     
     /// output
-    lazy var dataOutput: AVCaptureMetadataOutput = {
-        return AVCaptureMetadataOutput()
-        }()
-    
+    lazy var dataOutput = AVCaptureMetadataOutput()
 }
