@@ -9,7 +9,7 @@ Simple QRCode detector and generator in Swift
 ## Requirements
 
 * iOS 8.0+ 
-* Xcode 6.3
+* Xcode 7.0
 
 ## Installation
 
