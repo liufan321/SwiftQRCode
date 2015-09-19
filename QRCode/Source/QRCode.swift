@@ -76,7 +76,7 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
         colorFilter.setValue(backColor, forKey: "inputColor1")
         
         let transform = CGAffineTransformMakeScale(5, 5)
-        let transformedImage = colorFilter.outputImage.imageByApplyingTransform(transform)
+        let transformedImage = colorFilter.outputImage!.imageByApplyingTransform(transform)
         
         let image = UIImage(CIImage: transformedImage)
         
