@@ -97,13 +97,13 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
         colorFilter.setValue(color, forKey: "inputColor0")
         colorFilter.setValue(backColor, forKey: "inputColor1")
         
-        let transform = CGAffineTransformMakeScale(5, 5)
-        let transformedImage = colorFilter.outputImage.imageByApplyingTransform(transform)
+        let transform = CGAffineTransformMakeScale(10, 10)
+        let transformedImage = qrFilter.outputImage!.imageByApplyingTransform(transform)
         
         let image = UIImage(CIImage: transformedImage)
         
-        if avatarImage != nil && image != nil {
-            return insertAvatarImage(image!, avatarImage: avatarImage!, scale: avatarScale)
+        if avatarImage != nil {
+            return insertAvatarImage(image, avatarImage: avatarImage!, scale: avatarScale)
         }
         
         return image
@@ -147,7 +147,7 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
     /// start scan
     public func startScan() {
         if session.running {
-            println("the  capture session is running")
+            print("the  capture session is running")
             
             return
         }
@@ -157,7 +157,7 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
     /// stop scan
     public func stopScan() {
         if !session.running {
-            println("the  capture session is running")
+            print("the  capture session is running")
             
             return
         }
@@ -173,17 +173,17 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
     
     func setupSession() {
         if session.running {
-            println("the capture session is running")
+            print("the capture session is running")
             return
         }
         
         if !session.canAddInput(videoInput) {
-            println("can not add input device")
+            print("can not add input device")
             return
         }
         
         if !session.canAddOutput(dataOutput) {
-            println("can not add output device")
+            print("can not add output device")
             return
         }
         
@@ -200,8 +200,8 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
         
         for dataObject in metadataObjects {
             
-            if let codeObject = dataObject as? AVMetadataMachineReadableCodeObject {
-                let obj = previewLayer.transformedMetadataObjectForMetadataObject(codeObject) as! AVMetadataMachineReadableCodeObject
+            if let codeObject = dataObject as? AVMetadataMachineReadableCodeObject,
+                obj = previewLayer.transformedMetadataObjectForMetadataObject(codeObject) as? AVMetadataMachineReadableCodeObject {
 
                 if CGRectContainsRect(scanFrame, obj.bounds) {
                     if currentDetectedCount++ > maxDetectedCount {
@@ -231,7 +231,7 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
             return
         }
         
-        for layer in drawLayer.sublayers {
+        for layer in drawLayer.sublayers! {
             layer.removeFromSuperlayer()
         }
     }
@@ -255,11 +255,11 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
         var point = CGPoint()
         
         var index = 0
-        CGPointMakeWithDictionaryRepresentation(points[index++] as! CFDictionaryRef, &point)
+        CGPointMakeWithDictionaryRepresentation((points[index++] as! CFDictionary), &point)
         path.moveToPoint(point)
         
         while index < points.count {
-            CGPointMakeWithDictionaryRepresentation(points[index++] as! CFDictionaryRef, &point)
+            CGPointMakeWithDictionaryRepresentation((points[index++] as! CFDictionary), &point)
             path.addLineToPoint(point)
         }
         path.closePath()
@@ -275,19 +275,14 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
         }()
     
     /// drawLayer
-    lazy var drawLayer: CALayer = {
-        return CALayer()
-        }()
-    
+    lazy var drawLayer = CALayer()
     /// session
-    lazy var session: AVCaptureSession = {
-        return AVCaptureSession()
-        }()
-    
+    lazy var session = AVCaptureSession()
     /// input
     lazy var videoInput: AVCaptureDeviceInput? = {
+        
         if let device = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo) {
-            return AVCaptureDeviceInput(device: device, error: nil)
+            return try? AVCaptureDeviceInput(device: device)
         }
         return nil
         }()

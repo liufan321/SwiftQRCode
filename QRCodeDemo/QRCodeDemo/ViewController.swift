@@ -20,7 +20,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         scanner.prepareScan(view) { (stringValue) -> () in
-            println(stringValue)
+            print(stringValue)
         }
         // test scan frame
         scanner.scanFrame = view.bounds
