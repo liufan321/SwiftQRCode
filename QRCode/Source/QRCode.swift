@@ -159,7 +159,7 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
     /// stop scan
     public func stopScan() {
         if !session.running {
-            print("the  capture session is running")
+            print("the capture session is not running")
             
             return
         }
@@ -206,7 +206,8 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
                 obj = previewLayer.transformedMetadataObjectForMetadataObject(codeObject) as? AVMetadataMachineReadableCodeObject {
 
                 if CGRectContainsRect(scanFrame, obj.bounds) {
-                    if currentDetectedCount++ > maxDetectedCount {
+                    currentDetectedCount = currentDetectedCount + 1
+                    if currentDetectedCount > maxDetectedCount {
                         session.stopRunning()
                         
                         completedCallBack!(stringValue: codeObject.stringValue)
@@ -256,13 +257,16 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
         let path = UIBezierPath()
         var point = CGPoint()
         
-        var index = 0
-        CGPointMakeWithDictionaryRepresentation((points[index++] as! CFDictionary), &point)
+        CGPointMakeWithDictionaryRepresentation((points[0] as! CFDictionary), &point)
         path.moveToPoint(point)
         
+        var index = 1
         while index < points.count {
-            CGPointMakeWithDictionaryRepresentation((points[index++] as! CFDictionary), &point)
+            
+            CGPointMakeWithDictionaryRepresentation((points[index] as! CFDictionary), &point)
             path.addLineToPoint(point)
+            
+            index = index + 1
         }
         path.closePath()
         
