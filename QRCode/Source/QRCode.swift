@@ -127,7 +127,7 @@ public class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
         
         UIGraphicsEndImageContext()
         
-        return result
+        return result!
     }
     
     // MARK: - Video Scan
