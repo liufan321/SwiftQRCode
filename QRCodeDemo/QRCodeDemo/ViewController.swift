@@ -19,20 +19,20 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        scanner.prepareScan(view) { (stringValue) -> () in
+		scanner.prepareScan(view) { (stringValue) -> () in
             print(stringValue)
         }
         // test scan frame
         scanner.scanFrame = view.bounds
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         scanner.startScan()
     }
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.iconView.image = QRCode.generateImage("我就是刀哥", avatarImage: UIImage(named: "avatar"))
     }
 }
